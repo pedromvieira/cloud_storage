@@ -1,6 +1,6 @@
 use Mix.Config
 
-config :cloudstorage,
+config :cloud_storage,
   azure_default_scheme: "https://",
   azure_default_base_url: ".blob.core.windows.net/",
   azure_default_account: System.get_env("AZURE_ACCOUNT"),

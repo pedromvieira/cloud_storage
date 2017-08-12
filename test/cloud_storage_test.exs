@@ -1,4 +1,4 @@
 defmodule CloudStorageTest do
   use ExUnit.Case
-  doctest CloudStorage
+  doctest CloudStorage.Azure
 end

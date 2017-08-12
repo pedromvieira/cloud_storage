@@ -5,13 +5,14 @@ defmodule CloudStorage.Mixfile do
     [
       app: :cloud_storage,
       version: "0.1.0",
-      build_path: "../../_build",
-      config_path: "../../config/config.exs",
-      deps_path: "../../deps",
-      lockfile: "../../mix.lock",
-      elixir: "~> 1.5",
+      elixir: "~> 1.4",
+      build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
-      deps: deps()
+      description: description(),
+      package: package(),
+      deps: deps(),
+      name: "Cloud Storage",
+      source_url: "https://github.com/pedromvieira/cloud_storage"
     ]
   end
 
@@ -21,12 +22,29 @@ defmodule CloudStorage.Mixfile do
     ]
   end
 
+  defp description do
+    """
+    Elixir package to interact via REST API with Azure Storage and CDN Endpoint.
+    """
+  end
+
+  defp package do
+    [
+      name: :cloud_storage,
+      files: ["lib", "mix.exs", "LICENSE", "README.md"],
+      maintainers: ["Pedro Vieira - pedro@vieira.net"],
+      licenses: ["Apache 2.0"],
+      links: %{"GitHub" => "https://github.com/pedromvieira/cloud_storage"}
+    ]
+  end
+
   defp deps do
     [
       {:httpoison, "~> 0.13.0"},
       {:elixir_xml_to_map, "~> 0.1.1"},
       {:mime, "~> 1.1"},
       {:poison, "~> 3.1"},
+      {:ex_doc, "~> 0.16.2", only: :dev, runtime: false},
     ]
   end
 end
