@@ -6,18 +6,18 @@ Elixir package to interact via REST API with Azure Storage and CDN Endpoint. [ht
 
 1. Setup your Azure Subscription, CDN Endpoint and Application via CLI or Portal:
 
-  azure login
-  azure config mode arm
+    azure login
+    azure config mode arm
 
-  azure ad sp create --name "MyApp" --password "MyPassword"
-    Object Id:               [MyObjectID]
-    Service Principal Names: [MyAppID]
+    azure ad sp create --name "MyApp" --password "MyPassword"
+      Object Id:               [MyObjectID]
+      Service Principal Names: [MyAppID]
 
-  azure role assignment create --objectId [MyObjectID] --roleName "CDN Endpoint Contributor"
+    azure role assignment create --objectId [MyObjectID] --roleName "CDN Endpoint Contributor"
 
-  azure account show
-    ID: [MySubscriptionID]
-    Tenant ID: [MyTenantID]
+    azure account show
+      ID: [MySubscriptionID]
+      Tenant ID: [MyTenantID]
 
 2. Add `cloud_storage` to your list of dependencies in `mix.exs`:
 
