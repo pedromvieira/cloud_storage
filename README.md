@@ -78,7 +78,7 @@ config :cloud_storage,
   iex> CloudStorage.Azure.delete_blob("temp_file.txt")
   :ok
 
-  iex> token = CloudStorage.Azure.get_token()
+  iex> CloudStorage.Azure.get_token()
 
   iex> CloudStorage.Azure.get_token() |> CloudStorage.Azure.purge_content("/temp_file.txt")
 
