@@ -20,6 +20,30 @@ defmodule CloudStorage.Azure do
   @base_login Application.get_env(:cloud_storage, :azure_default_base_login)
 
   @doc """
+  Upload a File from an URL.
+
+  ## Examples
+
+    iex> CloudStorage.Azure.url_upload("https://www.google.com.br/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png", "logo.png")
+    :ok
+
+  """
+  def url_upload(url, remote_path) do
+    {:ok, response} = HTTPoison.get(url)
+    case response.status_code do
+      200 ->
+        content = response.body
+        type =
+          response.headers
+          |> List.keyfind("Content-Type", 0)
+          |> elem(1)
+        put_blob(remote_path, content, type)
+      _ -> :error
+    end
+  end
+
+
+  @doc """
   Send a File.
 
   ## Examples

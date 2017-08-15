@@ -4,7 +4,7 @@ defmodule CloudStorage.Mixfile do
   def project do
     [
       app: :cloud_storage,
-      version: "0.1.0",
+      version: "0.2.0",
       elixir: "~> 1.4",
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
@@ -33,7 +33,7 @@ defmodule CloudStorage.Mixfile do
       name: :cloud_storage,
       files: ["lib", "mix.exs", "LICENSE", "README.md"],
       maintainers: ["Pedro Vieira - pedro@vieira.net"],
-      licenses: ["Apache 2.0"],
+      licenses: ["MIT"],
       links: %{"GitHub" => "https://github.com/pedromvieira/cloud_storage"}
     ]
   end

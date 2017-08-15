@@ -7,6 +7,7 @@ Elixir package to interact via REST API with Azure Storage and CDN Endpoint. [ht
 1. Setup your Azure Subscription, CDN Endpoint and Application via CLI or Portal:
 
 ```
+
   azure login
   azure config mode arm
 
@@ -19,21 +20,31 @@ Elixir package to interact via REST API with Azure Storage and CDN Endpoint. [ht
   azure account show
     ID: [MySubscriptionID]
     Tenant ID: [MyTenantID]
+
 ```
 
-2. Add `cloud_storage` to your list of dependencies in `mix.exs`:
+2. Generate a Shared Access Signature in your Storage Account via CLI or Portal:
+
+```
+
+  azure storage account sas create --services b --permissions wdlacup --resource-types sco --protocol HttpsOnly --expiry "2018-12-31 00:00:00" -a [MyStorageAccount] -k [MyAccessKey]
+    Shared Access Signature [MySASToken]
+
+```
+
+3. Add `cloud_storage` to your list of dependencies in `mix.exs`:
 
 ```elixir
 
 def deps do
   [
-    {:cloud_storage, "~> 0.1.0"}
+    {:cloud_storage, "~> 0.2.0"}
   ]
 end
 
 ```
 
-3. Update your configuration:
+4. Update your configuration:
 
 ```elixir
 
@@ -82,7 +93,17 @@ config :cloud_storage,
 
   iex> CloudStorage.Azure.get_token() |> CloudStorage.Azure.purge_content("/temp_file.txt")
 
+  iex> CloudStorage.Azure.url_upload "https://www.google.com.br/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png", "logo.png")
+
 ```
+
+## News
+
+- **2017/08/15**
+  - Upload from URL and Updated Docs.
+- **2017/08/11**
+  - Initial version
+
 
 ## Documentation
 
