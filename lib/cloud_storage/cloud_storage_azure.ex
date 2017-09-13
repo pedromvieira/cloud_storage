@@ -53,7 +53,7 @@ defmodule CloudStorage.Azure do
 
   """
   def put_blob(full_path, content \\ "", type \\ "application/octet-stream") do
-    url = @base_scheme <> @storage_account <> @base_url <> @container <> "/" <> full_path <> @sas_token
+    url = @base_scheme <> @storage_account <> @base_url <> @container <> "/" <> full_path <> "?" <> @sas_token
     {:ok, response} = HTTPoison.put(url, content, ["Content-Type": type, "Content-Length": 0, "x-ms-blob-type": "BlockBlob"] )
     case Map.get(response, :status_code) do
       201 -> :ok
@@ -71,7 +71,7 @@ defmodule CloudStorage.Azure do
 
   """
   def list_blobs(full_path) do
-    base_url = @base_scheme <> @storage_account <> @base_url <> @container <> @sas_token
+    base_url = @base_scheme <> @storage_account <> @base_url <> @container <> "?" <> @sas_token
     url = base_url <> "&restype=container&comp=list&prefix=" <> full_path
     HTTPoison.get(url)
     |> elem(1)
@@ -92,7 +92,7 @@ defmodule CloudStorage.Azure do
 
   """
   def get_blob(full_path) do
-    url = @base_scheme <> @storage_account <> @base_url <> @container <> "/" <> full_path <> @sas_token
+    url = @base_scheme <> @storage_account <> @base_url <> @container <> "/" <> full_path <> "?" <> @sas_token
     HTTPoison.get(url)
     |> elem(1)
     |> Map.get(:body)
@@ -146,7 +146,7 @@ defmodule CloudStorage.Azure do
 
   """
   def delete_blob(full_path) do
-    url = @base_scheme <> @storage_account <> @base_url <> @container <> "/" <> full_path <> @sas_token
+    url = @base_scheme <> @storage_account <> @base_url <> @container <> "/" <> full_path <> "?" <> @sas_token
     {:ok, response} = HTTPoison.delete(url)
     case Map.get(response, :status_code) do
       202 -> :ok

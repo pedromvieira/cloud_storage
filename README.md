@@ -8,18 +8,12 @@ Elixir package to interact via REST API with Azure Storage and CDN Endpoint. [ht
 
 ```
 
-  azure login
-  azure config mode arm
-
-  azure ad sp create --name "MyApp" --password "MyPassword"
-    Object Id:               [MyObjectID]
-    Service Principal Names: [MyAppID]
-
-  azure role assignment create --objectId [MyObjectID] --roleName "CDN Endpoint Contributor"
-
-  azure account show
-    ID: [MySubscriptionID]
-    Tenant ID: [MyTenantID]
+   az login
+   az ad sp create-for-rbac --name "MyApp" --password "MyPassword"
+    "appId": [MyObjectID]
+   az role assignment create --assignee [MyObjectID] --role "CDN Endpoint Contributor"
+   az storage account keys list --account-name [ACCOUNT] --resource-group [RESOURCE]
+    "value:" [KEY]  
 
 ```
 
@@ -27,8 +21,7 @@ Elixir package to interact via REST API with Azure Storage and CDN Endpoint. [ht
 
 ```
 
-  azure storage account sas create --services b --permissions wdlacup --resource-types sco --protocol HttpsOnly --expiry "2018-12-31 00:00:00" -a [MyStorageAccount] -k [MyAccessKey]
-    Shared Access Signature [MySASToken]
+  az storage container generate-sas --permissions dlrw --account-name phishxcdn --expiry "2019-12-31" --account-key [KEY] --name [CONTAINER] --https-only
 
 ```
 
@@ -38,7 +31,7 @@ Elixir package to interact via REST API with Azure Storage and CDN Endpoint. [ht
 
 def deps do
   [
-    {:cloud_storage, "~> 0.2.0"}
+    {:cloud_storage, "~> 0.3.0"}
   ]
 end
 
@@ -99,6 +92,8 @@ config :cloud_storage,
 
 ## News
 
+- **2017/09/13**
+  - Upload Azure CLI.
 - **2017/08/15**
   - Upload from URL and Updated Docs.
 - **2017/08/11**
