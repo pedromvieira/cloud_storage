@@ -29,16 +29,19 @@ defmodule CloudStorage.Azure do
 
   """
   def url_upload(url, remote_path) do
-    {:ok, response} = HTTPoison.get(url)
+    {:ok, response} =
+      HTTPoison.get(url)
     case response.status_code do
       200 ->
-        content = response.body
+        content =
+          response.body
         type =
           response.headers
           |> List.keyfind("Content-Type", 0)
           |> elem(1)
         put_blob(remote_path, content, type)
-      _ -> :error
+      _ ->
+        :error
     end
   end
 
@@ -53,11 +56,15 @@ defmodule CloudStorage.Azure do
 
   """
   def put_blob(full_path, content \\ "", type \\ "application/octet-stream") do
-    url = @base_scheme <> @storage_account <> @base_url <> @container <> "/" <> full_path <> "?" <> @sas_token
-    {:ok, response} = HTTPoison.put(url, content, ["Content-Type": type, "Content-Length": 0, "x-ms-blob-type": "BlockBlob"] )
+    url =
+      @base_scheme <> @storage_account <> @base_url <> @container <> "/" <> full_path <> "?" <> @sas_token
+    {:ok, response} =
+      HTTPoison.put(url, content, ["Content-Type": type, "Content-Length": 0, "x-ms-blob-type": "BlockBlob"] )
     case Map.get(response, :status_code) do
-      201 -> :ok
-      _ -> :error
+      201 ->
+        :ok
+      _ ->
+        :error
     end
   end
 
@@ -71,8 +78,10 @@ defmodule CloudStorage.Azure do
 
   """
   def list_blobs(full_path) do
-    base_url = @base_scheme <> @storage_account <> @base_url <> @container <> "?" <> @sas_token
-    url = base_url <> "&restype=container&comp=list&prefix=" <> full_path
+    base_url =
+      @base_scheme <> @storage_account <> @base_url <> @container <> "?" <> @sas_token
+    url =
+      base_url <> "&restype=container&comp=list&prefix=" <> full_path
     HTTPoison.get(url)
     |> elem(1)
     |> Map.get(:body)
@@ -92,7 +101,8 @@ defmodule CloudStorage.Azure do
 
   """
   def get_blob(full_path) do
-    url = @base_scheme <> @storage_account <> @base_url <> @container <> "/" <> full_path <> "?" <> @sas_token
+    url =
+      @base_scheme <> @storage_account <> @base_url <> @container <> "/" <> full_path <> "?" <> @sas_token
     HTTPoison.get(url)
     |> elem(1)
     |> Map.get(:body)
@@ -114,7 +124,8 @@ defmodule CloudStorage.Azure do
       remote_path
       |> String.split("/")
       |> List.last
-    full_local_path = local_path <> "/" <> local_file
+    full_local_path =
+      local_path <> "/" <> local_file
     File.write(full_local_path, file_content)
   end
 
@@ -128,7 +139,8 @@ defmodule CloudStorage.Azure do
 
   """
   def upload_blob(local_path, remote_path) do
-    {:ok, file_content} = File.read(local_path)
+    {:ok, file_content} =
+      File.read(local_path)
     file_type =
       MIME.from_path(remote_path)
     put_blob(remote_path, file_content, file_type)
@@ -146,11 +158,15 @@ defmodule CloudStorage.Azure do
 
   """
   def delete_blob(full_path) do
-    url = @base_scheme <> @storage_account <> @base_url <> @container <> "/" <> full_path <> "?" <> @sas_token
-    {:ok, response} = HTTPoison.delete(url)
+    url =
+      @base_scheme <> @storage_account <> @base_url <> @container <> "/" <> full_path <> "?" <> @sas_token
+    {:ok, response} =
+      HTTPoison.delete(url)
     case Map.get(response, :status_code) do
-      202 -> :ok
-      _ -> :error
+      202 ->
+        :ok
+      _ ->
+        :error
     end
   end
 
@@ -166,11 +182,16 @@ defmodule CloudStorage.Azure do
 
   """
   def get_token() do
-    post_url = "/oauth2/token"
-    url = @base_login <> @tenant_id <> post_url
-    body = "grant_type=client_credentials&client_id=" <> @client_id <> "&client_secret=" <> @client_secret <> "&resource=" <> @base_resource
-    header = ["Content-Type": "application/x-www-form-urlencoded"]
-    {:ok, response} = HTTPoison.post(url, body, header)
+    post_url =
+      "/oauth2/token"
+    url =
+      @base_login <> @tenant_id <> post_url
+    body =
+      "grant_type=client_credentials&client_id=" <> @client_id <> "&client_secret=" <> @client_secret <> "&resource=" <> @base_resource
+    header =
+      ["Content-Type": "application/x-www-form-urlencoded"]
+    {:ok, response} =
+      HTTPoison.post(url, body, header)
     response.body
     |> Poison.decode!()
     |> Map.get("access_token")
@@ -186,15 +207,23 @@ defmodule CloudStorage.Azure do
 
   """
   def purge_content(token, path) do
-    header = ["Content-Type": "application/json", "Authorization": "Bearer " <> token]
-    params = "?api-version=2016-10-02"
-    post_url = "/resourceGroups/" <> @resourcegroup <> "/providers/" <> @provider <> "/profiles/" <> @profile <> "/endpoints/" <> @endpoint <> "/purge" <> params
-    url = @base_resource <> "subscriptions/" <> @subscription_id <> post_url
-    body = "{ \"contentPaths\": [\"" <> path <> "\"] }"
-    {:ok, response} = HTTPoison.post(url, body, header)
+    header =
+      ["Content-Type": "application/json", "Authorization": "Bearer " <> token]
+    params =
+      "?api-version=2016-10-02"
+    post_url =
+      "/resourceGroups/" <> @resourcegroup <> "/providers/" <> @provider <> "/profiles/" <> @profile <> "/endpoints/" <> @endpoint <> "/purge" <> params
+    url =
+      @base_resource <> "subscriptions/" <> @subscription_id <> post_url
+    body =
+      "{ \"contentPaths\": [\"" <> path <> "\"] }"
+    {:ok, response} =
+      HTTPoison.post(url, body, header)
     case Map.get(response, :status_code) do
-      202 -> :ok
-      _ -> :error
+      202 ->
+        :ok
+      _ ->
+        :error
     end
   end
 
