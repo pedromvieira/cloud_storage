@@ -31,7 +31,7 @@ Elixir package to interact via REST API with Azure Storage and CDN Endpoint. [ht
 
 def deps do
   [
-    {:cloud_storage, "~> 0.3.0"}
+    {:cloud_storage, "~> 0.3.2"}
   ]
 end
 
@@ -92,6 +92,8 @@ config :cloud_storage,
 
 ## News
 
+- **2018/04/01**
+  - Allow URL Upload with insecure HTTPS from source.
 - **2017/09/13**
   - Upload Azure CLI.
 - **2017/08/15**

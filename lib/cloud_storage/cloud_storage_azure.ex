@@ -29,8 +29,12 @@ defmodule CloudStorage.Azure do
 
   """
   def url_upload(url, remote_path) do
+    options =
+      [
+        hackney: [:insecure]
+      ]
     {:ok, response} =
-      HTTPoison.get(url)
+      HTTPoison.get(url, [], options)
     case response.status_code do
       200 ->
         content =
