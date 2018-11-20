@@ -31,4 +31,5 @@ config :cloud_storage,
   google_base_bucket: System.get_env("GOOGLE_STORAGE_BASE_BUCKET")
 
 config :goth,
-  config_module: CloudStorage.Google
+  config_module: CloudStorage.Google,
+  disabled: false

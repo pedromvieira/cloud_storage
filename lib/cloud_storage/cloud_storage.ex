@@ -161,5 +161,21 @@ defmodule CloudStorage do
     apply(module, fun, args)
   end
 
+  @doc """
+  Purge a File.
+  """
+  def purge(storage, full_path) do
+    module =
+      storage
+      |> module()
+    fun =
+      __ENV__
+      |> fun()
+    args =
+      [
+        full_path
+      ]
+    apply(module, fun, args)
+  end
 
 end

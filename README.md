@@ -72,7 +72,7 @@ config :cloud_storage,
 
 ## Installation (GOOGLE)
 
-1. Create a Service Account with Storage Object Admin:
+1. Create a Service Account with Storage Object Admin and Compute Load Balancer Admin:
 
 ```
 
@@ -113,6 +113,10 @@ config :cloud_storage,
   google_client_x509_cert_url: System.get_env("GOOGLE_STORAGE_CLIENT_CERT_URL"),
   google_scope_default: "https://www.googleapis.com/auth/cloud-platform",
   google_base_bucket: System.get_env("GOOGLE_STORAGE_BASE_BUCKET")
+
+config :goth,
+  config_module: CloudStorage.Google,
+  disabled: false
 
 ```
 

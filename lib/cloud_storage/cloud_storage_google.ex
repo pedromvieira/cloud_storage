@@ -340,4 +340,49 @@ defmodule CloudStorage.Google do
     end
   end
 
+  @doc """
+  Purge a CDN path content.
+
+  ## Examples
+
+    iex> CloudStorage.Google.purge("/temp_file.txt")
+    {:ok, "/temp_file.txt"}
+
+  """
+  def purge(full_path) do
+    header =
+      "application/json"
+      |> header_post()
+    body =
+      %{
+        path: full_path
+      }
+      |> Poison.encode!()
+    url =
+      "https://www.googleapis.com/compute/v1/projects/"
+      |> Kernel.<>(@project_id)
+      |> Kernel.<>("/global/urlMaps/")
+      |> Kernel.<>("phishx-cdn-balancer")
+      |> Kernel.<>("/invalidateCache")
+    {status, item} =
+      HTTPoison.post(url, body, header)
+    case status do
+      :ok ->
+        case item.status_code do
+          200 ->
+            {:ok, full_path}
+          _ ->
+            reason =
+              item
+              |> Map.get(:body)
+              |> Poison.decode!()
+              |> Map.get("error")
+              |> Map.get("message")
+            {:error, reason}
+        end
+      :error ->
+        {:error, item.status_code}
+    end
+  end
+
 end
