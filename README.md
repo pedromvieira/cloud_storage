@@ -2,6 +2,20 @@
 
 Elixir package to interact via REST API with Microsoft Azure Storage and Google Cloud Storage. [https://hex.pm/packages/cloud_storage](https://hex.pm/packages/cloud_storage).
 
+## Installation
+
+1. Add `cloud_storage` to your list of dependencies in `mix.exs`:
+
+```elixir
+
+def deps do
+  [
+    {:cloud_storage, "~> 0.4.0"}
+  ]
+end
+
+```
+
 ## Installation (AZURE)
 
 1. Setup your Azure Subscription, CDN Endpoint and Application via CLI or Portal:
@@ -33,19 +47,7 @@ Elixir package to interact via REST API with Microsoft Azure Storage and Google 
 
 ```
 
-4. Add `cloud_storage` to your list of dependencies in `mix.exs`:
-
-```elixir
-
-def deps do
-  [
-    {:cloud_storage, "~> 0.4.0"}
-  ]
-end
-
-```
-
-5. Update your configuration:
+4. Update your configuration:
 
 ```elixir
 
@@ -65,18 +67,6 @@ config :cloud_storage,
   azure_default_client_secret: System.get_env("AZURE_CLIENT_SECRET"),
   azure_default_base_resource: "https://management.azure.com/",
   azure_default_base_login: "https://login.microsoftonline.com/"
-
-```
-
-## Usage (AZURE)
-
-```elixir
-
-  iex> CloudStorage.Azure.put("temp_file.txt")
-
-  iex> CloudStorage.Azure.get("temp_file.txt")
-
-  iex> CloudStorage.Azure.list("temp_file.txt")
 
 ```
 
@@ -106,19 +96,7 @@ config :cloud_storage,
 
 ```
 
-4. Add `cloud_storage` to your list of dependencies in `mix.exs`:
-
-```elixir
-
-def deps do
-  [
-    {:cloud_storage, "~> 0.4.0"}
-  ]
-end
-
-```
-
-5. Update your configuration:
+4. Update your configuration:
 
 ```elixir
 
@@ -128,17 +106,17 @@ config :cloud_storage,
   google_private_key_id: System.get_env("GOOGLE_STORAGE_PRIVATE_KEY_ID"),
   google_private_key: System.get_env("GOOGLE_STORAGE_PRIVATE_KEY"),
   google_client_email: System.get_env("GOOGLE_STORAGE_CLIENT_EMAIL"),
-  google_client_id: System.get_env("GOOGLE_STORAGE_CLIENT_ID")
+  google_client_id: System.get_env("GOOGLE_STORAGE_CLIENT_ID"),
   google_auth_uri: "https://accounts.google.com/o/oauth2/auth",
   google_token_uri: "https://oauth2.googleapis.com/token",
   google_auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
-  google_client_x509_cert_url: System.get_env("GOOGLE_STORAGE_CLIENT_CERT_URL")
+  google_client_x509_cert_url: System.get_env("GOOGLE_STORAGE_CLIENT_CERT_URL"),
   google_scope_default: "https://www.googleapis.com/auth/cloud-platform",
   google_base_bucket: System.get_env("GOOGLE_STORAGE_BASE_BUCKET")
 
 ```
 
-## Usage (GOOGLE)
+## Usage
 
 ```elixir
 

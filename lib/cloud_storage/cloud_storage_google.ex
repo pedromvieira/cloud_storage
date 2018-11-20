@@ -14,12 +14,14 @@ defmodule CloudStorage.Google do
     {:ok, Keyword.put(config, :json, json())}
   end
 
-  def json do
+  defp json do
     %{
       type: Application.get_env(:cloud_storage, :google_type),
       project_id: @project_id,
       private_key_id: Application.get_env(:cloud_storage, :google_private_key_id),
-      private_key: Application.get_env(:cloud_storage, :google_private_key),
+      private_key:
+        Application.get_env(:cloud_storage, :google_private_key)
+        |> String.replace("\\n", "\n"),
       client_email: Application.get_env(:cloud_storage, :google_client_email),
       client_id: Application.get_env(:cloud_storage, :google_client_id),
       auth_uri: Application.get_env(:cloud_storage, :google_auth_uri),

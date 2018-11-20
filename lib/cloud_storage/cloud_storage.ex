@@ -21,6 +21,36 @@ defmodule CloudStorage do
     |> elem(0)
   end
 
+  @doc """
+  Get a Rest Token.
+
+  ## Examples
+
+    iex> CloudStorage.get_token(:azure) |> is_nil()
+    false
+
+  """
+  def get_token(storage) do
+    module =
+      storage
+      |> module()
+    fun =
+      __ENV__
+      |> fun()
+    args =
+      []
+    apply(module, fun, args)
+  end
+
+  @doc """
+  List Files.
+
+  ## Examples
+
+    iex> CloudStorage.list(:azure, "temp_file.txt") |> elem(1) |> List.first() |> Map.get("name")
+    "temp_file.txt"
+
+  """
   def list(storage, full_path \\ "", folders \\ false) do
     module =
       storage
@@ -36,6 +66,17 @@ defmodule CloudStorage do
     apply(module, fun, args)
   end
 
+  @doc """
+  Delete a File.
+
+  ## Examples
+
+    iex> CloudStorage.delete(:azure, "temp_file.txt")
+    {:ok, "temp_file.txt"}
+    iex> CloudStorage.put(:azure, "temp_file.txt")
+    {:ok, "temp_file.txt"}
+
+  """
   def delete(storage, full_path \\ "") do
     module =
       storage
@@ -50,6 +91,15 @@ defmodule CloudStorage do
     apply(module, fun, args)
   end
 
+  @doc """
+  Send a File.
+
+  ## Examples
+
+    iex> CloudStorage.put(:azure, "temp_file.txt")
+    {:ok, "temp_file.txt"}
+
+  """
   def put(storage, full_path, content \\ "", type \\ "application/octet-stream") do
     module =
       storage
