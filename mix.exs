@@ -4,7 +4,7 @@ defmodule CloudStorage.Mixfile do
   def project do
     [
       app: :cloud_storage,
-      version: "0.3.2",
+      version: "0.4.0",
       elixir: "~> 1.4",
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
@@ -18,13 +18,13 @@ defmodule CloudStorage.Mixfile do
 
   def application do
     [
-      extra_applications: [:logger]
+      extra_applications: [:logger, :poison]
     ]
   end
 
   defp description do
     """
-    Elixir package to interact via REST API with Azure Storage and CDN Endpoint.
+    Elixir package to interact via REST API with Azure Storage and Google Cloud Storage.
     """
   end
 
@@ -40,11 +40,13 @@ defmodule CloudStorage.Mixfile do
 
   defp deps do
     [
-      {:httpoison, "~> 0.13.0"},
-      {:elixir_xml_to_map, "~> 0.1.1"},
-      {:mime, "~> 1.1"},
-      {:poison, "~> 3.1"},
-      {:ex_doc, "~> 0.16.2", only: :dev, runtime: false},
+      {:httpoison, ">= 1.4.0"},
+      {:elixir_xml_to_map, ">= 0.1.2"},
+      {:mime, ">= 1.3.0"},
+      {:poison, ">= 4.0.1", override: true},
+      {:goth, ">= 0.11.1"},
+      {:ex_doc, ">= 0.19.1", only: :dev, runtime: false},
+      {:timex, ">= 3.2.0"},
     ]
   end
 end

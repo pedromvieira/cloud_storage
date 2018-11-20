@@ -1,8 +1,8 @@
 # CloudStorage
 
-Elixir package to interact via REST API with Azure Storage and CDN Endpoint. [https://hex.pm/packages/cloud_storage](https://hex.pm/packages/cloud_storage).
+Elixir package to interact via REST API with Microsoft Azure Storage and Google Cloud Storage. [https://hex.pm/packages/cloud_storage](https://hex.pm/packages/cloud_storage).
 
-## Installation
+## Installation (AZURE)
 
 1. Setup your Azure Subscription, CDN Endpoint and Application via CLI or Portal:
 
@@ -13,7 +13,7 @@ Elixir package to interact via REST API with Azure Storage and CDN Endpoint. [ht
     "appId": [MyObjectID]
    az role assignment create --assignee [MyObjectID] --role "CDN Endpoint Contributor"
    az storage account keys list --account-name [ACCOUNT] --resource-group [RESOURCE]
-    "value:" [KEY]  
+    "value:" [KEY]
 
 ```
 
@@ -25,19 +25,27 @@ Elixir package to interact via REST API with Azure Storage and CDN Endpoint. [ht
 
 ```
 
-3. Add `cloud_storage` to your list of dependencies in `mix.exs`:
+3. Generate a Application ID and Key for your Application via Portal:
+
+```
+
+  https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal#create-an-azure-active-directory-application
+
+```
+
+4. Add `cloud_storage` to your list of dependencies in `mix.exs`:
 
 ```elixir
 
 def deps do
   [
-    {:cloud_storage, "~> 0.3.2"}
+    {:cloud_storage, "~> 0.4.0"}
   ]
 end
 
 ```
 
-4. Update your configuration:
+5. Update your configuration:
 
 ```elixir
 
@@ -60,38 +68,94 @@ config :cloud_storage,
 
 ```
 
-## Usage
+## Usage (AZURE)
 
 ```elixir
 
-  iex> CloudStorage.Azure.put_blob("temp_file.txt")
-  :ok
+  iex> CloudStorage.Azure.put("temp_file.txt")
 
-  iex> CloudStorage.Azure.get_blob("temp_file.txt")
-  ""
+  iex> CloudStorage.Azure.get("temp_file.txt")
 
-  iex> CloudStorage.Azure.list_blobs("temp_file.txt") |> Map.get("Name")
-  "temp_file.txt"
+  iex> CloudStorage.Azure.list("temp_file.txt")
 
-  iex> CloudStorage.Azure.download_blob("temp_file.txt","test")
-  :ok
+```
 
-  iex> CloudStorage.Azure.upload_blob("test/temp_file.txt","temp_file.txt")
-  :ok
+## Installation (GOOGLE)
 
-  iex> CloudStorage.Azure.delete_blob("temp_file.txt")
-  :ok
+1. Create a Service Account with Storage Object Admin:
 
-  iex> CloudStorage.Azure.get_token()
+```
 
-  iex> CloudStorage.Azure.get_token() |> CloudStorage.Azure.purge_content("/temp_file.txt")
+  https://console.cloud.google.com/iam-admin/serviceaccounts
 
-  iex> CloudStorage.Azure.url_upload "https://www.google.com.br/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png", "logo.png")
+```
+
+2. Create a Load Balancer:
+
+```
+
+  https://console.cloud.google.com/net-services/loadbalancing/loadBalancers/list
+
+```
+
+3. Create a Storage and give permissions to your Service Account (Storage Object Admin) and to allUsers (Storage Object Viewer):
+
+```
+
+  https://console.cloud.google.com/storage/browser
+
+```
+
+4. Add `cloud_storage` to your list of dependencies in `mix.exs`:
+
+```elixir
+
+def deps do
+  [
+    {:cloud_storage, "~> 0.4.0"}
+  ]
+end
+
+```
+
+5. Update your configuration:
+
+```elixir
+
+config :cloud_storage,
+  google_type: "service_account",
+  google_project_id: System.get_env("GOOGLE_STORAGE_PROJECT_ID"),
+  google_private_key_id: System.get_env("GOOGLE_STORAGE_PRIVATE_KEY_ID"),
+  google_private_key: System.get_env("GOOGLE_STORAGE_PRIVATE_KEY"),
+  google_client_email: System.get_env("GOOGLE_STORAGE_CLIENT_EMAIL"),
+  google_client_id: System.get_env("GOOGLE_STORAGE_CLIENT_ID")
+  google_auth_uri: "https://accounts.google.com/o/oauth2/auth",
+  google_token_uri: "https://oauth2.googleapis.com/token",
+  google_auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
+  google_client_x509_cert_url: System.get_env("GOOGLE_STORAGE_CLIENT_CERT_URL")
+  google_scope_default: "https://www.googleapis.com/auth/cloud-platform",
+  google_base_bucket: System.get_env("GOOGLE_STORAGE_BASE_BUCKET")
+
+```
+
+## Usage (GOOGLE)
+
+```elixir
+
+  iex> CloudStorage.put(:azure, "temp_file.txt")
+
+  iex> CloudStorage.get(:azure, "temp_file.txt")
+
+  iex> CloudStorage.list(:google, "temp_file.txt")
 
 ```
 
 ## News
 
+- **2018/11/23**
+  - Add Google Cloud Storage Support.
+- **2018/11/13**
+  - Fix Get Token & updated API VERSION.
 - **2018/04/01**
   - Allow URL Upload with insecure HTTPS from source.
 - **2017/09/13**
@@ -108,7 +172,7 @@ Docs can be found at [https://hexdocs.pm/cloud_storage](https://hexdocs.pm/cloud
 
 ## License
 
-    Copyright © 2017 Pedro Vieira <pedro@vieira.net>
+    Copyright © 2018 Pedro Vieira <pedro@vieira.net>
 
     This work is free. You can redistribute it and/or modify it under the
     terms of the MIT License. See the LICENSE file for more details.
