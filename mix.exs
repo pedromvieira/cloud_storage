@@ -43,7 +43,7 @@ defmodule CloudStorage.Mixfile do
       {:httpoison, ">= 1.4.0"},
       {:elixir_xml_to_map, ">= 0.1.2"},
       {:mime, ">= 1.3.0"},
-      {:poison, ">= 4.0.1", override: true},
+      {:poison, ">= 3.0.1"},
       {:goth, ">= 0.11.1"},
       {:ex_doc, ">= 0.19.1", only: :dev, runtime: false},
       {:timex, ">= 3.2.0"},
