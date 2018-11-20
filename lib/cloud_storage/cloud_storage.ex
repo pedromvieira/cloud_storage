@@ -23,12 +23,6 @@ defmodule CloudStorage do
 
   @doc """
   Get a Rest Token.
-
-  ## Examples
-
-    iex> CloudStorage.get_token(:azure) |> is_nil()
-    false
-
   """
   def get_token(storage) do
     module =
@@ -44,12 +38,6 @@ defmodule CloudStorage do
 
   @doc """
   List Files.
-
-  ## Examples
-
-    iex> CloudStorage.list(:azure, "temp_file.txt") |> elem(1) |> List.first() |> Map.get("name")
-    "temp_file.txt"
-
   """
   def list(storage, full_path \\ "", folders \\ false) do
     module =
@@ -68,14 +56,6 @@ defmodule CloudStorage do
 
   @doc """
   Delete a File.
-
-  ## Examples
-
-    iex> CloudStorage.delete(:azure, "temp_file.txt")
-    {:ok, "temp_file.txt"}
-    iex> CloudStorage.put(:azure, "temp_file.txt")
-    {:ok, "temp_file.txt"}
-
   """
   def delete(storage, full_path \\ "") do
     module =
@@ -93,12 +73,6 @@ defmodule CloudStorage do
 
   @doc """
   Send a File.
-
-  ## Examples
-
-    iex> CloudStorage.put(:azure, "temp_file.txt")
-    {:ok, "temp_file.txt"}
-
   """
   def put(storage, full_path, content \\ "", type \\ "application/octet-stream") do
     module =
@@ -115,5 +89,77 @@ defmodule CloudStorage do
       ]
     apply(module, fun, args)
   end
+
+  @doc """
+  Upload a File from an URL.
+  """
+  def url(storage, url, remote_path) do
+    module =
+      storage
+      |> module()
+    fun =
+      __ENV__
+      |> fun()
+    args =
+      [
+        url,
+        remote_path
+      ]
+    apply(module, fun, args)
+  end
+
+  @doc """
+  Upload a File.
+  """
+  def upload(storage, local_path, remote_path) do
+    module =
+      storage
+      |> module()
+    fun =
+      __ENV__
+      |> fun()
+    args =
+      [
+        local_path,
+        remote_path
+      ]
+    apply(module, fun, args)
+  end
+
+  @doc """
+  Download a File.
+  """
+  def download(storage, remote_path, local_path) do
+    module =
+      storage
+      |> module()
+    fun =
+      __ENV__
+      |> fun()
+    args =
+      [
+        remote_path,
+        local_path
+      ]
+    apply(module, fun, args)
+  end
+
+  @doc """
+  Get a File.
+  """
+  def get(storage, full_path) do
+    module =
+      storage
+      |> module()
+    fun =
+      __ENV__
+      |> fun()
+    args =
+      [
+        full_path
+      ]
+    apply(module, fun, args)
+  end
+
 
 end

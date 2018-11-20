@@ -143,16 +143,19 @@ defmodule CloudStorage.Azure do
   ## Examples
 
     iex> CloudStorage.Azure.get("temp_file.txt")
-    ""
+    {:ok, ""}
 
   """
   def get(full_path) do
     url =
       full_path
       |> blob_url()
-    HTTPoison.get(url)
-    |> elem(1)
-    |> Map.get(:body)
+    content =
+      url
+      |> HTTPoison.get()
+      |> elem(1)
+      |> Map.get(:body)
+    {:ok, content}
   end
 
   defp blob_url(full_path) do
@@ -171,20 +174,24 @@ defmodule CloudStorage.Azure do
 
   ## Examples
 
-    iex> CloudStorage.Azure.download("temp_file.txt","test")
-    :ok
+    iex> CloudStorage.Azure.download("temp_file.txt", "test")
+    {:ok, "test/temp_file.txt"}
 
   """
   def download(remote_path, local_path) do
-    file_content =
+    {_status, file_content} =
       get(remote_path)
     local_file =
       remote_path
       |> String.split("/")
       |> List.last
     full_local_path =
-      local_path <> "/" <> local_file
-    File.write(full_local_path, file_content)
+      local_path
+      |> Kernel.<>("/")
+      |> Kernel.<>(local_file)
+    local_status =
+      File.write(full_local_path, file_content)
+    {local_status, full_local_path}
   end
 
   @doc """
@@ -192,7 +199,7 @@ defmodule CloudStorage.Azure do
 
   ## Examples
 
-    iex> CloudStorage.Azure.upload("test/temp_file.txt","temp_file.txt")
+    iex> CloudStorage.Azure.upload("test/temp_file.txt", "temp_file.txt")
     {:ok, "temp_file.txt"}
 
   """
@@ -268,11 +275,13 @@ defmodule CloudStorage.Azure do
 
   ## Examples
 
-    iex> CloudStorage.Azure.get_token() |> CloudStorage.Azure.purge("/temp_file.txt")
+    iex> CloudStorage.Azure.purge("/temp_file.txt")
     {:ok, "/temp_file.txt"}
 
   """
-  def purge(token, path) do
+  def purge(full_path) do
+    token =
+      get_token()
     header =
       [
         "Content-Type": "application/json",
@@ -297,12 +306,12 @@ defmodule CloudStorage.Azure do
       |> Kernel.<>(@subscription_id)
       |> Kernel.<>(post_url)
     body =
-      "{ \"contentPaths\": [\"" <> path <> "\"] }"
+      "{ \"contentPaths\": [\"#{full_path}\"] }"
     {:ok, response} =
       HTTPoison.post(url, body, header)
     case response.status_code do
       202 ->
-        {:ok, path}
+        {:ok, full_path}
       _ ->
         {:error, response.status_code}
     end

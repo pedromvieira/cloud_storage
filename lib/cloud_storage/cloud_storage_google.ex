@@ -67,6 +67,36 @@ defmodule CloudStorage.Google do
   end
 
   @doc """
+  Upload a File from an URL.
+
+  ## Examples
+
+    iex> CloudStorage.Google.url("https://www.google.com.br/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png", "logo.png")
+    {:ok, "logo.png"}
+
+  """
+  def url(url, remote_path) do
+    options =
+      [
+        hackney: [:insecure]
+      ]
+    {:ok, response} =
+      HTTPoison.get(url, [], options)
+    case response.status_code do
+      200 ->
+        content =
+          response.body
+        type =
+          response.headers
+          |> List.keyfind("Content-Type", 0)
+          |> elem(1)
+        put(remote_path, content, type)
+      _ ->
+        {:error, response.status_code}
+    end
+  end
+
+  @doc """
   List Files.
 
   ## Examples
@@ -130,6 +160,99 @@ defmodule CloudStorage.Google do
       :error ->
         {:error, items.status_code}
     end
+  end
+
+  @doc """
+  Get Files.
+
+  ## Examples
+
+    iex> CloudStorage.Google.get("temp_file.txt")
+    {:ok, ""}
+
+  """
+  def get(full_path) do
+    header =
+      header_get()
+    temp_url =
+      @base_bucket
+      |> Kernel.<>("/o/")
+      |> Kernel.<>(full_path)
+    url =
+      @base_scheme
+      |> Kernel.<>(temp_url)
+    {status, items} =
+      HTTPoison.get(url, header)
+    case status do
+      :ok ->
+        case items.status_code do
+          200 ->
+            file_url =
+              items
+              |> Map.get(:body)
+              |> Poison.decode!()
+              |> Map.get("mediaLink")
+            {_status, item} =
+              file_url
+              |> HTTPoison.get()
+            content =
+              item
+              |> Map.get(:body)
+            {:ok, content}
+          _ ->
+            reason =
+              items
+              |> Map.get(:body)
+              |> Poison.decode!()
+              |> Map.get("error")
+              |> Map.get("message")
+            {:error, reason}
+        end
+      :error ->
+        {:error, items.status_code}
+    end
+  end
+
+  @doc """
+  Download a File.
+
+  ## Examples
+
+    iex> CloudStorage.Google.download("temp_file.txt", "test")
+    {:ok, "test/temp_file.txt"}
+
+  """
+  def download(remote_path, local_path) do
+    {_status, file_content} =
+      get(remote_path)
+    local_file =
+      remote_path
+      |> String.split("/")
+      |> List.last
+    full_local_path =
+      local_path
+      |> Kernel.<>("/")
+      |> Kernel.<>(local_file)
+    local_status =
+      File.write(full_local_path, file_content)
+    {local_status, full_local_path}
+  end
+
+  @doc """
+  Upload a File.
+
+  ## Examples
+
+    iex> CloudStorage.Google.upload("test/temp_file.txt", "temp_file.txt")
+    {:ok, "temp_file.txt"}
+
+  """
+  def upload(local_path, remote_path) do
+    {:ok, file_content} =
+      File.read(local_path)
+    file_type =
+      MIME.from_path(remote_path)
+    put(remote_path, file_content, file_type)
   end
 
   @doc """
