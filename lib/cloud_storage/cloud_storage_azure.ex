@@ -72,7 +72,7 @@ defmodule CloudStorage.Azure do
       full_path
       |> blob_url()
     {:ok, response} =
-      HTTPoison.post(url, content, header, @options)
+      HTTPoison.put(url, content, header, @options)
     case response.status_code do
       201 ->
         {:ok, full_path}
