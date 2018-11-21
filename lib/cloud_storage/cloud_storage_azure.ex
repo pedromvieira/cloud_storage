@@ -160,7 +160,7 @@ defmodule CloudStorage.Azure do
       |> blob_url()
     content =
       url
-      |> HTTPoison.get()
+      |> HTTPoison.get(@options)
       |> elem(1)
       |> Map.get(:body)
     {:ok, content}
