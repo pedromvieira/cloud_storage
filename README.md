@@ -10,7 +10,7 @@ Elixir package to interact via REST API with Microsoft Azure Storage and Google 
 
 def deps do
   [
-    {:cloud_storage, "~> 0.4.0"}
+    {:cloud_storage, "~> 0.4.3"}
   ]
 end
 
