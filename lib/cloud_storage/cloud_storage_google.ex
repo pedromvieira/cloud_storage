@@ -5,9 +5,10 @@ defmodule CloudStorage.Google do
 
   use Goth.Config
 
+  @base_bucket Application.get_env(:cloud_storage, :google_base_bucket)
   @base_scheme "https://www.googleapis.com/storage/v1/b/"
   @base_upload_scheme "https://www.googleapis.com/upload/storage/v1/b/"
-  @base_bucket Application.get_env(:cloud_storage, :google_base_bucket)
+  @options [timeout: 600_000, recv_timeout: 600_000]
   @project_id Application.get_env(:cloud_storage, :google_project_id)
 
   def init(config) do
@@ -332,7 +333,7 @@ defmodule CloudStorage.Google do
       @base_upload_scheme
       |> Kernel.<>(temp_url)
     {status, item} =
-      HTTPoison.post(url, content, header)
+      HTTPoison.post(url, content, header, @options)
     case status do
       :ok ->
         case item.status_code do

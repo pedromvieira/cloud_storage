@@ -12,6 +12,7 @@ defmodule CloudStorage.Azure do
   @client_secret Application.get_env(:cloud_storage, :azure_default_client_secret)
   @container Application.get_env(:cloud_storage, :azure_default_container)
   @endpoint Application.get_env(:cloud_storage, :azure_default_endpoint)
+  @options [timeout: 600_000, recv_timeout: 600_000]
   @profile Application.get_env(:cloud_storage, :azure_default_profile)
   @provider Application.get_env(:cloud_storage, :azure_default_provider)
   @resourcegroup Application.get_env(:cloud_storage, :azure_default_resourcegroup)
@@ -71,7 +72,7 @@ defmodule CloudStorage.Azure do
       full_path
       |> blob_url()
     {:ok, response} =
-      HTTPoison.put(url, content, header)
+      HTTPoison.post(url, content, header, @options)
     case response.status_code do
       201 ->
         {:ok, full_path}

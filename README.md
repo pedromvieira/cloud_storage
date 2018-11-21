@@ -134,7 +134,9 @@ config :goth,
 
 ## News
 
-- **2018/11/23**
+- **2018/11/21**
+  - Fix list nil and put timeout.
+- **2018/11/20**
   - Add Google Cloud Storage Support.
 - **2018/11/13**
   - Fix Get Token & updated API VERSION.
