@@ -110,7 +110,7 @@ defmodule CloudStorage.Azure do
       |> Map.get("EnumerationResults")
       |> Map.get("Blobs")
       |> Map.get("Blob")
-    final_items =
+    temp_items =
       items
       |> is_map()
       |> case do
@@ -119,13 +119,20 @@ defmodule CloudStorage.Azure do
         false ->
           items
       end
-      |> Enum.map(fn x ->
-        %{
-          "content-type" => x["Properties"]["Content-Type"],
-          "name" => x["Name"],
-          "updated" => x["Properties"]["Last-Modified"] |> time_to_local()
-        }
-      end)
+    final_items =
+      case is_nil(temp_items) do
+        true ->
+          temp_items
+        false ->
+          temp_items
+          |> Enum.map(fn x ->
+            %{
+              "content-type" => x["Properties"]["Content-Type"],
+              "name" => x["Name"],
+              "updated" => x["Properties"]["Last-Modified"] |> time_to_local()
+            }
+          end)
+      end
     {:ok, final_items}
   end
 

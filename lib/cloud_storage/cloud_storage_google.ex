@@ -128,24 +128,36 @@ defmodule CloudStorage.Google do
               |> Map.get(:body)
               |> Poison.decode!()
               |> Map.get("items")
-              |> Enum.map(fn x ->
-                %{
-                  "content-type" => x["contentType"],
-                  "name" => x["name"],
-                  "updated" => x["updated"]
-                }
-              end)
-            final_items =
-              case folders do
+            filter_items =
+              case is_nil(temp_items) do
                 true ->
                   temp_items
                 false ->
                   temp_items
-                  |> Enum.filter(fn x ->
-                    ~r/\/$/
-                    |> Regex.match?(x["name"])
-                    |> Kernel.not()
+                  |> Enum.map(fn x ->
+                    %{
+                      "content-type" => x["contentType"],
+                      "name" => x["name"],
+                      "updated" => x["updated"]
+                    }
                   end)
+              end
+            final_items =
+              case folders do
+                true ->
+                  filter_items
+                false ->
+                  case is_nil(filter_items) do
+                    true ->
+                      filter_items
+                    false ->
+                      filter_items
+                      |> Enum.filter(fn x ->
+                        ~r/\/$/
+                        |> Regex.match?(x["name"])
+                        |> Kernel.not()
+                      end)
+                  end
               end
             {:ok, final_items}
           _ ->
