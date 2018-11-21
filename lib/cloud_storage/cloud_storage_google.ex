@@ -195,7 +195,7 @@ defmodule CloudStorage.Google do
       @base_scheme
       |> Kernel.<>(temp_url)
     {status, items} =
-      HTTPoison.get(url, header)
+      HTTPoison.get(url, header, @options)
     case status do
       :ok ->
         case items.status_code do
