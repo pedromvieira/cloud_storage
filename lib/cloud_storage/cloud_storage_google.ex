@@ -112,10 +112,10 @@ defmodule CloudStorage.Google do
     params =
       "?prefix=#{full_path}"
     temp_url =
-      @base_bucket
+      "#{@base_bucket}"
       |> Kernel.<>("/o")
     url =
-      @base_scheme
+      "#{@base_scheme}"
       |> Kernel.<>(temp_url)
       |> Kernel.<>(params)
     {status, items} =
@@ -188,11 +188,11 @@ defmodule CloudStorage.Google do
     header =
       header_get()
     temp_url =
-      @base_bucket
+      "#{@base_bucket}"
       |> Kernel.<>("/o/")
       |> Kernel.<>(full_path)
     url =
-      @base_scheme
+      "#{@base_scheme}"
       |> Kernel.<>(temp_url)
     {status, items} =
       HTTPoison.get(url, header, @options)
@@ -283,11 +283,11 @@ defmodule CloudStorage.Google do
     header =
       header_get()
     temp_url =
-      @base_bucket
+      "#{@base_bucket}"
       |> Kernel.<>("/o/")
       |> Kernel.<>(full_path)
     url =
-      @base_scheme
+      "#{@base_scheme}"
       |> Kernel.<>(temp_url)
     {status, item} =
       HTTPoison.delete(url, header)
@@ -326,11 +326,11 @@ defmodule CloudStorage.Google do
     params =
       "?uploadType=media&predefinedAcl=publicRead&name=#{full_path}"
     temp_url =
-      @base_bucket
+      "#{@base_bucket}"
       |> Kernel.<>("/o")
       |> Kernel.<>(params)
     url =
-      @base_upload_scheme
+      "#{@base_upload_scheme}"
       |> Kernel.<>(temp_url)
     {status, item} =
       HTTPoison.post(url, content, header, @options)
@@ -373,7 +373,7 @@ defmodule CloudStorage.Google do
       |> Poison.encode!()
     url =
       "https://www.googleapis.com/compute/v1/projects/"
-      |> Kernel.<>(@project_id)
+      |> Kernel.<>("#{@project_id}")
       |> Kernel.<>("/global/urlMaps/")
       |> Kernel.<>("phishx-cdn-balancer")
       |> Kernel.<>("/invalidateCache")
