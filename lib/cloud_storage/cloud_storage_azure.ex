@@ -92,12 +92,12 @@ defmodule CloudStorage.Azure do
   """
   def list(full_path \\ "", _folders \\ false) do
     base_url =
-      @base_scheme
-      |> Kernel.<>(@storage_account)
-      |> Kernel.<>(@base_url)
-      |> Kernel.<>(@container)
+      "#{@base_scheme}"
+      |> Kernel.<>("#{@storage_account}")
+      |> Kernel.<>("#{@base_url}")
+      |> Kernel.<>("#{@container}")
       |> Kernel.<>("?")
-      |> Kernel.<>(@sas_token)
+      |> Kernel.<>("#{@sas_token}")
     url =
       base_url
       |> Kernel.<>("&restype=container&comp=list&prefix=")
@@ -167,14 +167,14 @@ defmodule CloudStorage.Azure do
   end
 
   defp blob_url(full_path) do
-    @base_scheme
-    |> Kernel.<>(@storage_account)
-    |> Kernel.<>(@base_url)
-    |> Kernel.<>(@container)
+    "#{@base_scheme}"
+    |> Kernel.<>("#{@storage_account}")
+    |> Kernel.<>("#{@base_url}")
+    |> Kernel.<>("#{@container}")
     |> Kernel.<>("/")
     |> Kernel.<>(full_path)
     |> Kernel.<>("?")
-    |> Kernel.<>(@sas_token)
+    |> Kernel.<>("#{@sas_token}")
   end
 
   @doc """
@@ -261,16 +261,16 @@ defmodule CloudStorage.Azure do
     post_url =
       "/oauth2/token"
     url =
-      @base_login
-      |> Kernel.<>(@tenant_id)
+      "#{@base_login}"
+      |> Kernel.<>("#{@tenant_id}")
       |> Kernel.<>(post_url)
     body =
       "grant_type=client_credentials&client_id="
-      |> Kernel.<>(@client_id)
+      |> Kernel.<>("#{@client_id}")
       |> Kernel.<>("&client_secret=")
-      |> Kernel.<>(@client_secret)
+      |> Kernel.<>("#{@client_secret}")
       |> Kernel.<>("&resource=")
-      |> Kernel.<>(@base_resource)
+      |> Kernel.<>("#{@base_resource}")
     {:ok, response} =
       HTTPoison.post(url, body, header)
     response.body
@@ -299,19 +299,19 @@ defmodule CloudStorage.Azure do
       "?api-version=#{@azure_api_version}"
     post_url =
       "/resourceGroups/"
-      |> Kernel.<>(@resourcegroup)
+      |> Kernel.<>("#{@resourcegroup}")
       |> Kernel.<>("/providers/")
-      |> Kernel.<>(@provider)
+      |> Kernel.<>("#{@provider}")
       |> Kernel.<>("/profiles/")
-      |> Kernel.<>(@profile)
+      |> Kernel.<>("#{@profile}")
       |> Kernel.<>("/endpoints/")
-      |> Kernel.<>(@endpoint)
+      |> Kernel.<>("#{@endpoint}")
       |> Kernel.<>("/purge")
       |> Kernel.<>(params)
     url =
-      @base_resource
+      "#{@base_resource}"
       |> Kernel.<>("subscriptions/")
-      |> Kernel.<>(@subscription_id)
+      |> Kernel.<>("#{@subscription_id}")
       |> Kernel.<>(post_url)
     body =
       "{ \"contentPaths\": [\"#{full_path}\"] }"
