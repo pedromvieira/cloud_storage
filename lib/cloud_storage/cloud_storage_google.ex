@@ -72,8 +72,8 @@ defmodule CloudStorage.Google do
 
   ## Examples
 
-    iex> CloudStorage.Google.url("https://www.google.com.br/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png", "logo.png")
-    {:ok, "logo.png"}
+    iex> CloudStorage.Google.url("https://www.google.com.br/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png", "accounts/logo.png")
+    {:ok, "accounts/logo.png"}
 
   """
   def url(url, remote_path) do
@@ -102,8 +102,8 @@ defmodule CloudStorage.Google do
 
   ## Examples
 
-    iex> CloudStorage.Google.list("temp_file.txt") |> elem(1) |> List.first() |> Map.get("name")
-    "temp_file.txt"
+    iex> CloudStorage.Google.list("accounts/temp_file.txt") |> elem(1) |> List.first() |> Map.get("name")
+    "accounts/temp_file.txt"
 
   """
   def list(full_path \\ "", folders \\ false) do
@@ -180,17 +180,20 @@ defmodule CloudStorage.Google do
 
   ## Examples
 
-    iex> CloudStorage.Google.get("temp_file.txt")
+    iex> CloudStorage.Google.get("accounts/temp_file.txt")
     {:ok, ""}
 
   """
   def get(full_path) do
+    final_path =
+      full_path
+      |> URI.encode_www_form()
     header =
       header_get()
     temp_url =
       "#{@base_bucket}"
       |> Kernel.<>("/o/")
-      |> Kernel.<>(full_path)
+      |> Kernel.<>(final_path)
     url =
       "#{@base_scheme}"
       |> Kernel.<>(temp_url)
@@ -231,7 +234,7 @@ defmodule CloudStorage.Google do
 
   ## Examples
 
-    iex> CloudStorage.Google.download("temp_file.txt", "test")
+    iex> CloudStorage.Google.download("accounts/temp_file.txt", "test")
     {:ok, "test/temp_file.txt"}
 
   """
@@ -256,8 +259,8 @@ defmodule CloudStorage.Google do
 
   ## Examples
 
-    iex> CloudStorage.Google.upload("test/temp_file.txt", "temp_file.txt")
-    {:ok, "temp_file.txt"}
+    iex> CloudStorage.Google.upload("test/temp_file.txt", "accounts/temp_file.txt")
+    {:ok, "accounts/temp_file.txt"}
 
   """
   def upload(local_path, remote_path) do
@@ -273,19 +276,22 @@ defmodule CloudStorage.Google do
 
   ## Examples
 
-    iex> CloudStorage.Google.delete("temp_file.txt")
-    {:ok, "temp_file.txt"}
-    iex> CloudStorage.Google.put("temp_file.txt")
-    {:ok, "temp_file.txt"}
+    iex> CloudStorage.Google.delete("accounts/temp_file.txt")
+    {:ok, "accounts/temp_file.txt"}
+    iex> CloudStorage.Google.put("accounts/temp_file.txt")
+    {:ok, "accounts/temp_file.txt"}
 
   """
   def delete(full_path) do
+    final_path =
+      full_path
+      |> URI.encode_www_form()
     header =
       header_get()
     temp_url =
       "#{@base_bucket}"
       |> Kernel.<>("/o/")
-      |> Kernel.<>(full_path)
+      |> Kernel.<>(final_path)
     url =
       "#{@base_scheme}"
       |> Kernel.<>(temp_url)
@@ -315,8 +321,8 @@ defmodule CloudStorage.Google do
 
   ## Examples
 
-    iex> CloudStorage.Google.put("temp_file.txt")
-    {:ok, "temp_file.txt"}
+    iex> CloudStorage.Google.put("accounts/temp_file.txt")
+    {:ok, "accounts/temp_file.txt"}
 
   """
   def put(full_path, content \\ "", type \\ "application/octet-stream") do
@@ -358,8 +364,8 @@ defmodule CloudStorage.Google do
 
   ## Examples
 
-    iex> CloudStorage.Google.purge("/temp_file.txt")
-    {:ok, "/temp_file.txt"}
+    iex> CloudStorage.Google.purge("/accounts/temp_file.txt")
+    {:ok, "/accounts/temp_file.txt"}
 
   """
   def purge(full_path) do

@@ -26,8 +26,8 @@ defmodule CloudStorage.Azure do
 
   ## Examples
 
-    iex> CloudStorage.Azure.url("https://www.google.com.br/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png", "logo.png")
-    {:ok, "logo.png"}
+    iex> CloudStorage.Azure.url("https://www.google.com.br/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png", "accounts/logo.png")
+    {:ok, "accounts/logo.png"}
 
   """
   def url(url, remote_path) do
@@ -57,8 +57,8 @@ defmodule CloudStorage.Azure do
 
   ## Examples
 
-    iex> CloudStorage.Azure.put("temp_file.txt")
-    {:ok, "temp_file.txt"}
+    iex> CloudStorage.Azure.put("accounts/temp_file.txt")
+    {:ok, "accounts/temp_file.txt"}
 
   """
   def put(full_path, content \\ "", type \\ "application/octet-stream") do
@@ -86,8 +86,8 @@ defmodule CloudStorage.Azure do
 
   ## Examples
 
-    iex> CloudStorage.Azure.list("temp_file.txt") |> elem(1) |> List.first() |> Map.get("name")
-    "temp_file.txt"
+    iex> CloudStorage.Azure.list("accounts/temp_file.txt") |> elem(1) |> List.first() |> Map.get("name")
+    "accounts/temp_file.txt"
 
   """
   def list(full_path \\ "", _folders \\ false) do
@@ -150,7 +150,7 @@ defmodule CloudStorage.Azure do
 
   ## Examples
 
-    iex> CloudStorage.Azure.get("temp_file.txt")
+    iex> CloudStorage.Azure.get("accounts/temp_file.txt")
     {:ok, ""}
 
   """
@@ -182,7 +182,7 @@ defmodule CloudStorage.Azure do
 
   ## Examples
 
-    iex> CloudStorage.Azure.download("temp_file.txt", "test")
+    iex> CloudStorage.Azure.download("accounts/temp_file.txt", "test")
     {:ok, "test/temp_file.txt"}
 
   """
@@ -207,8 +207,8 @@ defmodule CloudStorage.Azure do
 
   ## Examples
 
-    iex> CloudStorage.Azure.upload("test/temp_file.txt", "temp_file.txt")
-    {:ok, "temp_file.txt"}
+    iex> CloudStorage.Azure.upload("test/temp_file.txt", "accounts/temp_file.txt")
+    {:ok, "accounts/temp_file.txt"}
 
   """
   def upload(local_path, remote_path) do
@@ -224,10 +224,10 @@ defmodule CloudStorage.Azure do
 
   ## Examples
 
-    iex> CloudStorage.Azure.delete("temp_file.txt")
-    {:ok, "temp_file.txt"}
-    iex> CloudStorage.Azure.put("temp_file.txt")
-    {:ok, "temp_file.txt"}
+    iex> CloudStorage.Azure.delete("accounts/temp_file.txt")
+    {:ok, "accounts/temp_file.txt"}
+    iex> CloudStorage.Azure.put("accounts/temp_file.txt")
+    {:ok, "accounts/temp_file.txt"}
 
   """
   def delete(full_path) do
