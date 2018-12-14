@@ -10,7 +10,7 @@ Elixir package to interact via REST API with Microsoft Azure Storage and Google 
 
 def deps do
   [
-    {:cloud_storage, "~> 0.4.3"}
+    {:cloud_storage, "~> 0.4"}
   ]
 end
 
@@ -134,6 +134,8 @@ config :goth,
 
 ## News
 
+- **2018/12/14**
+  - Fix Google Storage full path encode.
 - **2018/11/21**
   - Fix list nil and put timeout.
 - **2018/11/20**

@@ -4,7 +4,7 @@ defmodule CloudStorage.Mixfile do
   def project do
     [
       app: :cloud_storage,
-      version: "0.4.5",
+      version: "0.4.6",
       elixir: "~> 1.4",
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
