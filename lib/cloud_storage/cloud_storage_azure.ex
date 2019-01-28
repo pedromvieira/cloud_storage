@@ -274,7 +274,7 @@ defmodule CloudStorage.Azure do
     {:ok, response} =
       HTTPoison.post(url, body, header)
     response.body
-    |> Poison.decode!()
+    |> Jason.decode!()
     |> Map.get("access_token")
   end
 

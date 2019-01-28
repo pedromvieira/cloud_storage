@@ -4,7 +4,7 @@ defmodule CloudStorage.Mixfile do
   def project do
     [
       app: :cloud_storage,
-      version: "0.4.6",
+      version: "0.4.8",
       elixir: "~> 1.4",
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
@@ -18,7 +18,7 @@ defmodule CloudStorage.Mixfile do
 
   def application do
     [
-      extra_applications: [:logger, :poison]
+      extra_applications: [:logger]
     ]
   end
 
@@ -43,8 +43,9 @@ defmodule CloudStorage.Mixfile do
       {:httpoison, ">= 1.4.0"},
       {:elixir_xml_to_map, ">= 0.1.2"},
       {:mime, ">= 1.3.0"},
-      {:poison, ">= 3.0.1"},
-      {:goth, ">= 0.11.1"},
+      {:jason, ">= 1.1.0"},
+      {:joken, ">= 2.0.0"},
+      {:goth, ">= 1.0.0"},
       {:ex_doc, ">= 0.19.1", only: :dev, runtime: false},
       {:timex, ">= 3.2.0"},
     ]

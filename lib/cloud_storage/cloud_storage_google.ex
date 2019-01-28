@@ -30,7 +30,7 @@ defmodule CloudStorage.Google do
       auth_provider_x509_cert_url: Application.get_env(:cloud_storage, :google_auth_provider_x509_cert_url),
       client_x509_cert_url: Application.get_env(:cloud_storage, :google_client_x509_cert_url)
     }
-    |> Poison.encode!()
+    |> Jason.encode!()
   end
 
   @doc """
@@ -127,7 +127,7 @@ defmodule CloudStorage.Google do
             temp_items =
               items
               |> Map.get(:body)
-              |> Poison.decode!()
+              |> Jason.decode!()
               |> Map.get("items")
             filter_items =
               case is_nil(temp_items) do
@@ -165,7 +165,7 @@ defmodule CloudStorage.Google do
             reason =
               items
               |> Map.get(:body)
-              |> Poison.decode!()
+              |> Jason.decode!()
               |> Map.get("error")
               |> Map.get("message")
             {:error, reason}
@@ -206,7 +206,7 @@ defmodule CloudStorage.Google do
             file_url =
               items
               |> Map.get(:body)
-              |> Poison.decode!()
+              |> Jason.decode!()
               |> Map.get("mediaLink")
             {_status, item} =
               file_url
@@ -219,7 +219,7 @@ defmodule CloudStorage.Google do
             reason =
               items
               |> Map.get(:body)
-              |> Poison.decode!()
+              |> Jason.decode!()
               |> Map.get("error")
               |> Map.get("message")
             {:error, reason}
@@ -306,7 +306,7 @@ defmodule CloudStorage.Google do
             reason =
               item
               |> Map.get(:body)
-              |> Poison.decode!()
+              |> Jason.decode!()
               |> Map.get("error")
               |> Map.get("message")
             {:error, reason}
@@ -349,7 +349,7 @@ defmodule CloudStorage.Google do
             reason =
               item
               |> Map.get(:body)
-              |> Poison.decode!()
+              |> Jason.decode!()
               |> Map.get("error")
               |> Map.get("message")
             {:error, reason}
@@ -376,7 +376,7 @@ defmodule CloudStorage.Google do
       %{
         path: full_path
       }
-      |> Poison.encode!()
+      |> Jason.encode!()
     url =
       "https://www.googleapis.com/compute/v1/projects/"
       |> Kernel.<>("#{@project_id}")
@@ -394,7 +394,7 @@ defmodule CloudStorage.Google do
             reason =
               item
               |> Map.get(:body)
-              |> Poison.decode!()
+              |> Jason.decode!()
               |> Map.get("error")
               |> Map.get("message")
             {:error, reason}
