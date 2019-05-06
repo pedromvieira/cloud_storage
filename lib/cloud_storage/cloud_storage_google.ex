@@ -102,17 +102,17 @@ defmodule CloudStorage.Google do
 
   ## Examples
 
-    iex> CloudStorage.Google.list("accounts/temp_file.txt") |> elem(1) |> List.first() |> Map.get("name")
-    "accounts/temp_file.txt"
+    iex> CloudStorage.Google.list("accounts/logo.png") |> elem(1) |> List.first() |> Map.get("name")
+    "accounts/logo.png"
 
   """
-  def list(full_path \\ "", folders \\ false) do
+  def list(full_path \\ "", folders \\ false, bucket \\ @base_bucket) do
     header =
       header_get()
     params =
       "?prefix=#{full_path}"
     temp_url =
-      "#{@base_bucket}"
+      "#{bucket}"
       |> Kernel.<>("/o")
     url =
       "#{@base_scheme}"
@@ -180,18 +180,18 @@ defmodule CloudStorage.Google do
 
   ## Examples
 
-    iex> CloudStorage.Google.get("accounts/temp_file.txt")
-    {:ok, ""}
+    iex> CloudStorage.Google.get("accounts/logo.png") |> elem(0)
+    :ok
 
   """
-  def get(full_path) do
+  def get(full_path, bucket \\ @base_bucket) do
     final_path =
       full_path
       |> URI.encode_www_form()
     header =
       header_get()
     temp_url =
-      "#{@base_bucket}"
+      "#{bucket}"
       |> Kernel.<>("/o/")
       |> Kernel.<>(final_path)
     url =
@@ -282,14 +282,14 @@ defmodule CloudStorage.Google do
     {:ok, "accounts/temp_file.txt"}
 
   """
-  def delete(full_path) do
+  def delete(full_path, bucket \\ @base_bucket) do
     final_path =
       full_path
       |> URI.encode_www_form()
     header =
       header_get()
     temp_url =
-      "#{@base_bucket}"
+      "#{bucket}"
       |> Kernel.<>("/o/")
       |> Kernel.<>(final_path)
     url =
@@ -325,14 +325,14 @@ defmodule CloudStorage.Google do
     {:ok, "accounts/temp_file.txt"}
 
   """
-  def put(full_path, content \\ "", type \\ "application/octet-stream") do
+  def put(full_path, content \\ "", type \\ "application/octet-stream", bucket \\ @base_bucket) do
     header =
       type
       |> header_post()
     params =
       "?uploadType=media&predefinedAcl=publicRead&name=#{full_path}"
     temp_url =
-      "#{@base_bucket}"
+      "#{bucket}"
       |> Kernel.<>("/o")
       |> Kernel.<>(params)
     url =
