@@ -30,7 +30,7 @@ defmodule CloudStorage.Azure do
     {:ok, "accounts/logo.png"}
 
   """
-  def url(url, remote_path) do
+  def url(url, remote_path, _bucket \\ nil) do
     options =
       [
         hackney: [:insecure]
@@ -61,7 +61,7 @@ defmodule CloudStorage.Azure do
     {:ok, "accounts/temp_file.txt"}
 
   """
-  def put(full_path, content \\ "", type \\ "application/octet-stream") do
+  def put(full_path, content \\ "", type \\ "application/octet-stream", _bucket \\ nil) do
     header =
       [
         "Content-Type": type,
@@ -90,7 +90,7 @@ defmodule CloudStorage.Azure do
     "accounts/temp_file.txt"
 
   """
-  def list(full_path \\ "", _folders \\ false) do
+  def list(full_path \\ "", _folders \\ false, _bucket \\ nil) do
     base_url =
       "#{@base_scheme}"
       |> Kernel.<>("#{@storage_account}")
@@ -154,7 +154,7 @@ defmodule CloudStorage.Azure do
     {:ok, ""}
 
   """
-  def get(full_path) do
+  def get(full_path, _bucket \\ nil) do
     url =
       full_path
       |> blob_url()
@@ -186,7 +186,7 @@ defmodule CloudStorage.Azure do
     {:ok, "test/temp_file.txt"}
 
   """
-  def download(remote_path, local_path) do
+  def download(remote_path, local_path, _bucket \\ nil) do
     {_status, file_content} =
       get(remote_path)
     local_file =
@@ -211,7 +211,7 @@ defmodule CloudStorage.Azure do
     {:ok, "accounts/temp_file.txt"}
 
   """
-  def upload(local_path, remote_path) do
+  def upload(local_path, remote_path, _bucket \\ nil) do
     {:ok, file_content} =
       File.read(local_path)
     file_type =
@@ -230,7 +230,7 @@ defmodule CloudStorage.Azure do
     {:ok, "accounts/temp_file.txt"}
 
   """
-  def delete(full_path) do
+  def delete(full_path, _bucket \\ nil) do
     url =
       full_path
       |> blob_url()
@@ -287,7 +287,7 @@ defmodule CloudStorage.Azure do
     {:ok, "/temp_file.txt"}
 
   """
-  def purge(full_path) do
+  def purge(full_path, _bucket \\ nil) do
     token =
       get_token()
     header =

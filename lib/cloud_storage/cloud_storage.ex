@@ -3,6 +3,8 @@ defmodule CloudStorage do
   CloudStorage Documentation.
   """
 
+  @base_bucket Application.get_env(:cloud_storage, :google_base_bucket)
+
   alias CloudStorage.Azure
   alias CloudStorage.Google
 
@@ -39,7 +41,7 @@ defmodule CloudStorage do
   @doc """
   List Files.
   """
-  def list(storage, full_path \\ "", folders \\ false) do
+  def list(storage, full_path \\ "", folders \\ false, bucket \\ @base_bucket) do
     module =
       storage
       |> module()
@@ -49,7 +51,8 @@ defmodule CloudStorage do
     args =
       [
         full_path,
-        folders
+        folders,
+        bucket
       ]
     apply(module, fun, args)
   end
@@ -57,7 +60,7 @@ defmodule CloudStorage do
   @doc """
   Delete a File.
   """
-  def delete(storage, full_path \\ "") do
+  def delete(storage, full_path \\ "", bucket \\ @base_bucket) do
     module =
       storage
       |> module()
@@ -66,7 +69,8 @@ defmodule CloudStorage do
       |> fun()
     args =
       [
-        full_path
+        full_path,
+        bucket
       ]
     apply(module, fun, args)
   end
@@ -74,7 +78,7 @@ defmodule CloudStorage do
   @doc """
   Send a File.
   """
-  def put(storage, full_path, content \\ "", type \\ "application/octet-stream") do
+  def put(storage, full_path, content \\ "", type \\ "application/octet-stream", bucket \\ @base_bucket) do
     module =
       storage
       |> module()
@@ -85,7 +89,8 @@ defmodule CloudStorage do
       [
         full_path,
         content,
-        type
+        type,
+        bucket
       ]
     apply(module, fun, args)
   end
@@ -93,7 +98,7 @@ defmodule CloudStorage do
   @doc """
   Upload a File from an URL.
   """
-  def url(storage, url, remote_path) do
+  def url(storage, url, remote_path, bucket \\ @base_bucket) do
     module =
       storage
       |> module()
@@ -103,7 +108,8 @@ defmodule CloudStorage do
     args =
       [
         url,
-        remote_path
+        remote_path,
+        bucket
       ]
     apply(module, fun, args)
   end
@@ -111,7 +117,7 @@ defmodule CloudStorage do
   @doc """
   Upload a File.
   """
-  def upload(storage, local_path, remote_path) do
+  def upload(storage, local_path, remote_path, bucket \\ @base_bucket) do
     module =
       storage
       |> module()
@@ -121,7 +127,8 @@ defmodule CloudStorage do
     args =
       [
         local_path,
-        remote_path
+        remote_path,
+        bucket
       ]
     apply(module, fun, args)
   end
@@ -129,7 +136,7 @@ defmodule CloudStorage do
   @doc """
   Download a File.
   """
-  def download(storage, remote_path, local_path) do
+  def download(storage, remote_path, local_path, bucket \\ @base_bucket) do
     module =
       storage
       |> module()
@@ -139,7 +146,8 @@ defmodule CloudStorage do
     args =
       [
         remote_path,
-        local_path
+        local_path,
+        bucket
       ]
     apply(module, fun, args)
   end
@@ -147,7 +155,7 @@ defmodule CloudStorage do
   @doc """
   Get a File.
   """
-  def get(storage, full_path) do
+  def get(storage, full_path, bucket \\ @base_bucket) do
     module =
       storage
       |> module()
@@ -156,7 +164,8 @@ defmodule CloudStorage do
       |> fun()
     args =
       [
-        full_path
+        full_path,
+        bucket
       ]
     apply(module, fun, args)
   end
@@ -164,7 +173,7 @@ defmodule CloudStorage do
   @doc """
   Purge a File.
   """
-  def purge(storage, full_path) do
+  def purge(storage, full_path, bucket \\ @base_bucket) do
     module =
       storage
       |> module()
@@ -173,7 +182,8 @@ defmodule CloudStorage do
       |> fun()
     args =
       [
-        full_path
+        full_path,
+        bucket
       ]
     apply(module, fun, args)
   end

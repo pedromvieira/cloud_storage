@@ -76,7 +76,7 @@ defmodule CloudStorage.Google do
     {:ok, "accounts/logo.png"}
 
   """
-  def url(url, remote_path) do
+  def url(url, remote_path, bucket \\ @base_bucket) do
     options =
       [
         hackney: [:insecure]
@@ -91,7 +91,7 @@ defmodule CloudStorage.Google do
           response.headers
           |> List.keyfind("Content-Type", 0)
           |> elem(1)
-        put(remote_path, content, type)
+        put(remote_path, content, type, bucket)
       _ ->
         {:error, response.status_code}
     end
@@ -238,9 +238,9 @@ defmodule CloudStorage.Google do
     {:ok, "test/temp_file.txt"}
 
   """
-  def download(remote_path, local_path) do
+  def download(remote_path, local_path, bucket \\ @base_bucket) do
     {_status, file_content} =
-      get(remote_path)
+      get(remote_path, bucket)
     local_file =
       remote_path
       |> String.split("/")
@@ -263,12 +263,12 @@ defmodule CloudStorage.Google do
     {:ok, "accounts/temp_file.txt"}
 
   """
-  def upload(local_path, remote_path) do
+  def upload(local_path, remote_path, bucket \\ @base_bucket) do
     {:ok, file_content} =
       File.read(local_path)
     file_type =
       MIME.from_path(remote_path)
-    put(remote_path, file_content, file_type)
+    put(remote_path, file_content, file_type, bucket)
   end
 
   @doc """
@@ -368,7 +368,7 @@ defmodule CloudStorage.Google do
     {:ok, "/accounts/temp_file.txt"}
 
   """
-  def purge(full_path) do
+  def purge(full_path, bucket \\ @base_bucket) do
     header =
       "application/json"
       |> header_post()
@@ -381,7 +381,7 @@ defmodule CloudStorage.Google do
       "https://www.googleapis.com/compute/v1/projects/"
       |> Kernel.<>("#{@project_id}")
       |> Kernel.<>("/global/urlMaps/")
-      |> Kernel.<>("phishx-cdn-balancer")
+      |> Kernel.<>("#{bucket}-balancer")
       |> Kernel.<>("/invalidateCache")
     {status, item} =
       HTTPoison.post(url, body, header)
